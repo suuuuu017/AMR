@@ -13,14 +13,14 @@ clc
 %% Parameters
 
 % Workspace Size
-xlim([0 100])
-ylim([0 100])
+xlim([0 200])
+ylim([0 200])
 
 %Velocity (constant for this demo example) 
 vel = 5;
 
 %Steering angle
-steering = pi/6; 
+steering = pi/4; 
 
 %Initialize a vector of positions for the robot
 x=[]; 
@@ -28,8 +28,8 @@ y=[];
 
 %% Robot Initial Pose
 
-x(1) = 50;
-y(1) = 50;
+x(1) = 100;
+y(1) = 100;
 
 % Initial Orientation 
 theta(1) = pi/3;
@@ -44,7 +44,7 @@ ylim([0 100])
 %% Move Robot
 
 %number of steps of the simualtion
-nstep = 50;
+nstep = 10;
 
 %time step
 dt = 0.1;
@@ -52,15 +52,16 @@ dt = 0.1;
  
 for i = 1:nstep
     
-    %robot non-holonomic dynamics (as seen in class)
+    %robot non-ho
+    % lonomic dynamics (as seen in class)
     x(i+1) = x(i) + vel * cos(theta(i)) * dt;
     y(i+1) = y(i) + vel * sin(theta(i)) * dt;
     theta(i+1) = theta(i) + steering * dt;
     
     robot = TriangularRobot(x(i),y(i),theta(i));
     plot(robot(:,1),robot(:,2),'-',x,y,'-');
-    xlim([0 100])
-    ylim([0 100])
+    xlim([0 200])
+    ylim([0 200])
     pause(0.01)
     
 end
