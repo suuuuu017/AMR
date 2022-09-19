@@ -42,61 +42,64 @@ xlim([0 200])
 ylim([0 200])
 %----------------position calculated from 1 ------------------
 
-xg = 150;
-yg = 150;
+xg = 10;
+yg = 10;
 
 vel = 5;
 
 nstep = 100;
 
-% xStep = linspace(x(2), xg, nstep);
-% yStep = linspace(y(2), yg, nstep);
 
-velx = (xg - x(2)) / nstep;
-vely = (yg - y(2)) / nstep;
+dt = 0.05;
+xp = x(2);
+yp = y(2);
+ang = theta(2);
 
-dt = 0.1;
+xData = [];
+yData = [];
+time = [];
 
-for i = 2:nstep + 3
-    if i == 2
-        x(i + 1) = x(i);
-        y(i + 1) = y(i);
-        velxd(i) = 0;
-        velyd(i) = 0;
-    elseif i == nstep + 3
-        x(i + 1) = x(i);
-        y(i + 1) = y(i);
-        velxd(i) = 0;
-        velyd(i) = 0;
-    else
-        x(i+1) = x(i) + velx;
-        y(i+1) = y(i) + vely;
-        velxd(i) = velx;
-        velyd(i) = vely;
-    end
+velData = [];
+
+vd = 0;
+
+while (abs(xp - xg) > 0.001) && (abs(yp - yg) > 0.001)
     
-    theta(i+1) = theta(i);
-    robot = TriangularRobot(x(i),y(i),theta(i));
-    plot(robot(:,1),robot(:,2),'-',x,y,'-');
+    velData = [velData, vd];
+    vd = sqrt((xg - xp)^2 + (yg - yp)^2);
+    if vd > 5
+        vd = 5;
+    end
+    steering = atan2(yg - yp, xg - xp) - ang;
+    if steering > pi/4
+        steering = pi/4;
+    end
+    ang = ang + steering * dt;
+    xp = xp + vd * cos(ang) * dt;
+    xData = [xData, xp];
+    yp = yp + vd * sin(ang) * dt;
+    yData = [yData, yp];
+
+    i = i + 1;
+    time = [time, i];
+
+    robot = TriangularRobot(xp,yp,ang);
+    plot(robot(:,1),robot(:,2),'-',xData,yData,'-');
     xlim([0 200])
     ylim([0 200])
     pause(0.01)
-
-end
+    
+end    
 
 figure;
 
-plot(velxd)
-title('x velocity graph');
-figure;
+plot(velData)
+title('vel');
+% figure;
 
-plot(velyd)
-title('y velocity graph');
-figure;
-
-plot(x);
-title('x position');
-figure;
-
-plot(y);
-title('y position');
+% plot(x);
+% title('x position');
+% figure;
+% 
+% plot(y);
+% title('y position');

@@ -49,31 +49,55 @@ vel = 5;
 
 nstep = 100;
 
-% xStep = linspace(x(2), xg, nstep);
-% yStep = linspace(y(2), yg, nstep);
-
-velx = (xg - x(2)) / nstep;
-vely = (yg - y(2)) / nstep;
 
 dt = 0.1;
+xp = x(2);
+yp = y(2);
 
-for i = 2:nstep + 2
-    if i == 2
-        x(i + 1) = x(i);
-        y(i + 1) = y(i);
-    else
-        x(i+1) = x(i) + velx;
-        y(i+1) = y(i) + vely;
+xData = [];
+yData = [];
+time = [];
+
+velData = [];
+
+vd = 0;
+
+while xp < xg
+    
+    velData = [velData, vd];
+    vd = sqrt((xg - xp)^2 + (yg - yp)^2);
+    if vd > 5
+        vd = 5;
     end
-    theta(i+1) = theta(i);
-    robot = TriangularRobot(x(i),y(i),theta(i));
-    plot(robot(:,1),robot(:,2),'-',x,y,'-');
+    steering = atan2(yg - yp, xg - xp);
+    if steering > pi/4
+        steering = pi/4;
+    end
+    xp = xp + vd * cos(theta) * dt;
+    xData = [xData, xp];
+    yp = yp + vd * sin(theta) * dt;
+    yData = [yData, yp];
+
+    i = i + 1;
+    time = [time, i];
+
+    robot = TriangularRobot(xp,yp,theta(1));
+    plot(robot(:,1),robot(:,2),'-',xData,yData,'-');
     xlim([0 200])
     ylim([0 200])
     pause(0.01)
-
-end
-
-plot(x)
     
+end    
 
+figure;
+
+plot(velData)
+title('vel');
+% figure;
+
+% plot(x);
+% title('x position');
+% figure;
+% 
+% plot(y);
+% title('y position');
