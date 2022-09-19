@@ -19,7 +19,7 @@ x(1) = 10;
 y(1) = 10;
 
 % Initial Orientation 
-theta(1) = 0;
+theta = 0;
 
 robot = TriangularRobot(x,y,theta(1));
 
@@ -28,7 +28,7 @@ xlim([0 200])
 ylim([0 200])
 
 destX = [20, 50, 190];
-destY = [20, 70, 180];
+destY = [20, 70, 100];
 
 xp = x(1);
 yp = y(1);
@@ -37,7 +37,7 @@ setpoint = 3;
 
 i = 1;
 
-Kp = 1.5;
+Kp = 0.6;
 Ki = 0.1;
 Kd = 0.001;
 
@@ -52,10 +52,12 @@ velData = [];
 time = [];
 
 xData = [];
+yData = [];
 vel = 0;
+theta = 0;
 
 for destIdx = 1:3
-    while (xp < destX(destIdx) - 0.1) && (yp < destY(destIdx) - 0.1)
+    while (xp < destX(destIdx) - 0.001) && (yp < destY(destIdx) - 0.001)
         vd = sqrt((destX(destIdx) - xp)^2 + (destY(destIdx) - yp)^2);
         measured_value = vel;
     
@@ -64,25 +66,34 @@ for destIdx = 1:3
         derivative = (error - previous_error)/dt ;
         output = Kp*error + Ki*integral + Kd*derivative;
         vel = 0.99*vel + output;
+        if vel > 5
+            vel = 5;
+        end
         velData = [velData, vel];
         previous_error = error;
     
-        theta = atan2(destY(destIdx) - yp, destX(destIdx) - xp);
+        steering = atan2(destY(destIdx) - yp, destX(destIdx) - xp) - theta;
+        if steering > pi/4
+            steering = pi/4;
+        end
+        theta = theta + steering * dt;
         xp = xp + vel * cos(theta) * dt;
         xData = [xData, xp];
         yp = yp + vel * sin(theta) * dt;
+        yData = [yData, yp];
     
         i = i + 1;
         time = [time, i];
     
         robot = TriangularRobot(xp,yp,theta(1));
-        plot(robot(:,1),robot(:,2),'-',xp,yp,'-');
+        plot(robot(:,1),robot(:,2),'-',xData,yData,'-');
         xlim([0 200])
         ylim([0 200])
         pause(0.01)
         
     end    
 end
+figure;
 plot(time, velData);
 figure;
 plot(time, xData);
