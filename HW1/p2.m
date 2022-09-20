@@ -43,7 +43,7 @@ ylim([0 200])
 %----------------position calculated from 1 ------------------
 
 xg = 10;
-yg = 10;
+yg = 120;
 
 vel = 5;
 
@@ -51,9 +51,9 @@ nstep = 100;
 
 
 dt = 0.05;
-xp = x(2);
-yp = y(2);
-ang = theta(2);
+xp = 100;
+yp = 120;
+ang = 0;
 
 xData = [];
 yData = [];
@@ -62,19 +62,21 @@ time = [];
 velData = [];
 
 vd = 0;
-
-while (abs(xp - xg) > 0.001) && (abs(yp - yg) > 0.001)
+%TODO: change the bound to 0.3, add constant
+while (abs(xp - xg) > 0.01) || (abs(yp - yg) > 0.01)
     
     velData = [velData, vd];
     vd = sqrt((xg - xp)^2 + (yg - yp)^2);
     if vd > 5
         vd = 5;
     end
-    steering = atan2(yg - yp, xg - xp) - ang;
-    if steering > pi/4
-        steering = pi/4;
+    
+    error = atan2(yg - yp, xg - xp) - ang;
+    errorPri = atan2(sin(error), cos(error));
+    if errorPri > pi/4
+        errorPri = pi/4;
     end
-    ang = ang + steering * dt;
+    ang = ang + errorPri * dt;
     xp = xp + vd * cos(ang) * dt;
     xData = [xData, xp];
     yp = yp + vd * sin(ang) * dt;

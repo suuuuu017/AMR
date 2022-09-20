@@ -57,7 +57,7 @@ vel = 0;
 theta = 0;
 
 for destIdx = 1:3
-    while (abs(xp - destX(destIdx)) > 0.3) || (abs(yp - destY(destIdx)) > 0.3)
+    while (abs(xp - destIdx) < 0.3) || (< 0.3)
         vd = sqrt((destX(destIdx) - xp)^2 + (destY(destIdx) - yp)^2);
         measured_value = vel;
         velData = [velData, vel];

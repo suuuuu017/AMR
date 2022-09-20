@@ -15,19 +15,26 @@ y=[];
 
 %% Robot Initial Pose
 
-x(1) = 0;
-y(1) = 0;
+x(1) = 40;
+y(1) = 20;
+
+% x(1) = 100;
+% y(1) = 180;
 
 % Initial Orientation 
-theta(1) = 0;
+theta = -pi/3;
 
-robot = TriangularRobot(x,y,theta(1));
+robot = TriangularRobot(x,y,theta);
 
 plot(robot(:,1),robot(:,2),'-');
 xlim([0 200])
 ylim([0 200])
 
-destX = linspace(20, 20, 200);
+a = 1;
+b = -1;
+c = 0;
+
+destX = linspace(20, 120, 200);
 destY = linspace(20, 120, 200);
 
 xp = x(1);
@@ -51,26 +58,42 @@ time = [];
 
 xData = [];
 yData = [];
-vel = 0;
+vel = 3;
 
 dis = [];
 
 setDis = 10;
 
-for destIdx = 1:200
-%     vd = 100;
-    theta = atan2(destY(destIdx) - yp, destX(destIdx) - xp);
-    measured_value = sqrt((destX(destIdx) - xp)^2 + (destY(destIdx) - yp)^2);
-    error = measured_value - setDis;
-    integral = integral + error*dt;
-    derivative = (error - previous_error)/dt ;
-    output = Kp*error + Ki*integral + Kd*derivative;
-    vel = output + 0.99*vel;
-%     velData = [velData, vel];
-    previous_error = error;
+step = 300;
 
-    dis = [dis, sqrt((destX(destIdx) - xp)^2 + (destY(destIdx) - yp)^2)];
-    
+kt = 0.2;
+kh = 4;
+
+for i = 1: step
+%     vd = 100;
+    error = atan2(-1*a, b)- theta;
+    controlH = kh*(atan2(sin(error), cos(error)));
+
+    if (a*xp + b*yp + c) / sqrt(a^2 + b^2) >= 0
+        controlT = -kt * ((a*xp + b*yp + c) / sqrt(a^2 + b^2) - 10);
+    else
+        controlT = -kt * ((a*xp + b*yp + c) / sqrt(a^2 + b^2) + 10);
+    end
+%     controlT = -kt * (abs((a*xp + b*yp + c) / sqrt(a^2 + b^2)) - 10) ;
+    steering = controlT + controlH;
+    if steering > pi/4
+        steering = pi/4;
+    end
+%     error = measured_value - setDis;
+%     integral = integral + error*dt;
+%     derivative = (error - previous_error)/dt ;
+%     output = Kp*error + Ki*integral + Kd*derivative;
+%     vel = output + 0.99*vel;
+%     velData = [velData, vel];
+%     previous_error = error;
+
+    dis = [dis, abs((a*xp + b*yp + c) / sqrt(a^2 + b^2))];
+    theta = theta + steering * dt;
     xp = xp + vel * cos(theta) * dt;
     xData = [xData, xp];
     yp = yp + vel * sin(theta) * dt;
@@ -80,9 +103,8 @@ for destIdx = 1:200
 %     time = [time, i];
     
 
-    robot = TriangularRobot(xp,yp,theta(1));
-    plot(robot(:,1),robot(:,2),'-',xData,yData,'-');
-    
+    robot = TriangularRobot(xp,yp,theta);
+    plot(robot(:,1),robot(:,2),'-',xData,yData,'-', destX, destY, 'g-');
 %     hold on;
     xlim([0 200])
     ylim([0 200])

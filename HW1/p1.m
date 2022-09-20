@@ -8,7 +8,6 @@ clc
 xlim([0 200])
 ylim([0 200])
 
-
 %Initialize a vector of positions for the robot
 x=[]; 
 y=[];
@@ -19,9 +18,8 @@ x(1) = 100;
 y(1) = 100;
 
 % Initial Orientation 
-theta(1) = pi/3;
-%TODO: change the theta to random angle
-% theta(1) = 2*pi*rand;
+
+theta(1) = 2*pi*rand;
 
 % Build Robot Model
 robot = TriangularRobot(x,y,theta(1));
