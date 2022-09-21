@@ -15,11 +15,11 @@ y=[];
 
 %% Robot Initial Pose
 
-x(1) = 10;
-y(1) = 10;
+x(1) = 100;
+y(1) = 100;
 
 % Initial Orientation 
-theta = 0;
+theta = 2*pi*rand;
 
 robot = TriangularRobot(x,y,theta(1));
 
@@ -27,11 +27,11 @@ plot(robot(:,1),robot(:,2),'-');
 xlim([0 200])
 ylim([0 200])
 
-destX = [20, 50, 190];
-destY = [20, 70, 100];
+destX = [200*rand, 200*rand, 200*rand];
+destY = [200*rand, 200*rand, 200*rand];
 
-xp = 160;
-yp = 140;
+xp = x(1);
+yp = y(1);
 
 setpoint = 3;
 
@@ -70,8 +70,8 @@ for destIdx = 1:3
             vel = 5;
         end
         previous_error = error;
-        steer = atan2(destY(destIdx) - yp, destX(destIdx) - xp);
-        steering = atan2(sin(steer), cos(steer)) - theta;
+        steer = atan2(destY(destIdx) - yp, destX(destIdx) - xp) - theta;
+        steering = atan2(sin(steer), cos(steer));
         if steering > pi/4
             steering = pi/4;
         end

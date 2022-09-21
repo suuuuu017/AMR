@@ -15,28 +15,31 @@ y=[];
 
 %% Robot Initial Pose
 
-x(1) = 40;
-y(1) = 20;
+% x(1) = 40;
+% y(1) = 20;
 
-% x(1) = 100;
-% y(1) = 180;
+x(1) = 100;
+y(1) = 100;
 
 % Initial Orientation 
-theta = -pi/3;
+theta = 2*pi*rand;
 
 robot = TriangularRobot(x,y,theta);
 
 plot(robot(:,1),robot(:,2),'-');
 xlim([0 200])
 ylim([0 200])
+figure;
 
-a = 1;
-b = -1;
-c = 0;
+a = 2;
+b = 4;
+c = -300;
 
-destX = linspace(20, 120, 200);
-destY = linspace(20, 120, 200);
-
+destX = 0:200;
+destY = -(a/b)*destX - c/b;
+plot(destX, destY, 'g-'); 
+xlim([0 200])
+ylim([0 200])
 xp = x(1);
 yp = y(1);
 
@@ -58,20 +61,20 @@ time = [];
 
 xData = [];
 yData = [];
-vel = 3;
+vel = 5;
 
 dis = [];
 
 setDis = 10;
 
-step = 300;
+step = 1000;
 
 kt = 0.2;
-kh = 4;
+kh = 10;
 
 for i = 1: step
 %     vd = 100;
-    error = atan2(-1*a, b)- theta;
+    error = atan2(-1*a, b) - theta;
     controlH = kh*(atan2(sin(error), cos(error)));
 
     if (a*xp + b*yp + c) / sqrt(a^2 + b^2) >= 0
