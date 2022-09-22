@@ -52,23 +52,25 @@ xp = x(2);
 yp = y(2);
 ang = theta(2);
 
-xData = [x(1), x(2)];
-yData = [y(1), y(2)];
+xData = [x(2)];
+yData = [y(2)];
 time = [];
 
 velData = [];
 
+kv = 1;
+kp = 1;
+
 vd = 0;
-%TODO: change the bound to 0.3, add constant
-while (abs(xp - xg) > 0.01) || (abs(yp - yg) > 0.01)
+while (abs(xp - xg) > 0.1) || (abs(yp - yg) > 0.1)
     
     velData = [velData, vd];
-    vd = sqrt((xg - xp)^2 + (yg - yp)^2);
+    vd = kv * sqrt((xg - xp)^2 + (yg - yp)^2);
     if vd > 5
         vd = 5;
     end
     
-    error = atan2(yg - yp, xg - xp) - ang;
+    error = kp*(atan2(yg - yp, xg - xp) - ang);
     errorPri = atan2(sin(error), cos(error));
     if errorPri > pi/4
         errorPri = pi/4;

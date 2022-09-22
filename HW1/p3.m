@@ -56,6 +56,8 @@ yData = [];
 vel = 0;
 theta = 0;
 
+kp = 1;
+
 for destIdx = 1:3
     while (abs(xp - destX(destIdx)) > 0.3) || (abs(yp - destY(destIdx)) > 0.3)
         vd = sqrt((destX(destIdx) - xp)^2 + (destY(destIdx) - yp)^2);
@@ -70,7 +72,7 @@ for destIdx = 1:3
             vel = 5;
         end
         previous_error = error;
-        steer = atan2(destY(destIdx) - yp, destX(destIdx) - xp) - theta;
+        steer = kp*(atan2(destY(destIdx) - yp, destX(destIdx) - xp) - theta);
         steering = atan2(sin(steer), cos(steer));
         if steering > pi/4
             steering = pi/4;
