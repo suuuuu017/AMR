@@ -60,10 +60,17 @@ while (abs(x - xg) > 0.1) || (abs(y - yg) > 0.1)
     xdiv = xatt + xrep;
     ydiv = yatt + yrep;
 
+    % max 5
+    theta = atan2(ydiv, xdiv);
+    vel = sqrt(ydiv ^ 2 + xdiv ^ 2);
+    if vel > 5
+        vel = 5;
+    end
+
     xData = [xData, x];
     yData = [yData, y];
-    x = x + xdiv * dt;
-    y = y + ydiv * dt;
+    x = x + vel * cos(theta) * dt;
+    y = y + vel * sin(theta) * dt;
 
 end
 
