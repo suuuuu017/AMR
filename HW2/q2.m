@@ -8,7 +8,7 @@ ylim([0 100])
 
 goal = [80, 20];
 
-c1 = 1.0;
+c1 = 1;
 
 x1 = linspace(0, 100, 101);
 y1 = x1';
@@ -18,7 +18,7 @@ z1 = 0.5 * c1 * ((x1 - goal(1)).^2 + (y1 - goal(2)).^2);
 % contour(x1, y1, z1, 100);
 % figure;
 
-c2 = 10000;
+c2 = 20000;
 
 disTh = 30;
 
@@ -40,7 +40,7 @@ z = z1 + z2;
 
 start = [10, 80];
 
-dt = 0.01;
+dt = 0.1;
 
 x = start(1);
 y = start(2);
@@ -73,9 +73,11 @@ while (abs(x - xg) > 0.1) || (abs(y - yg) > 0.1)
 
     xData = [xData, x];
     yData = [yData, y];
-    x = x + vel * cos(theta) * dt;
-    y = y + vel * sin(theta) * dt;
-    ang = ang + (theta - ang) * dt;
+    error = theta - ang;
+    error = atan2(sin(error), cos(error));
+    ang = ang + error * dt;
+    x = x + vel * cos(ang) * dt;
+    y = y + vel * sin(ang) * dt;
 
     robot = TriangularRobot(x,y,ang);
     plot(robot(:,1),robot(:,2),'-',xData,yData,'-');
