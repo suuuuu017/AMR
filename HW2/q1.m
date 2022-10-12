@@ -35,7 +35,7 @@ z2 = (0.5 * c2 * (1 ./ (DistanceCal(x2, y2, oCenter(1), oCenter(2))) ...
 z2(z2>maxval) = maxval;
 surf(x2,y2,z2);
 figure;
-contour(x2, y2, z2, 500);
+contour(x2, y2, z2, 70);
 figure;
 
 z = z1 + z2;

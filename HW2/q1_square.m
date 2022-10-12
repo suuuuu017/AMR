@@ -17,7 +17,7 @@ figure;
 contour(x1, y1, z1, 100);
 figure;
 
-c2 = 110000;
+c2 = 130000;
 
 disTh = 30;
 
