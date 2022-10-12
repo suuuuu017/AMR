@@ -9,7 +9,6 @@ ylim([0 100])
 goal = [80, 20];
 
 c1 = 1;
-
 x1 = linspace(0, 100, 101);
 y1 = x1';
 z1 = 0.5 * c1 * ((x1 - goal(1)).^2 + (y1 - goal(2)).^2);
@@ -18,49 +17,54 @@ figure;
 contour(x1, y1, z1, 100);
 figure;
 
-c2 = 110000;
-% c2 = 100000;
-maxval = 3000;
+c2 = 120000;
 
-disTh = 60;
+disTh = 30;
 
-oCenter = [40, 60];
+oX = [30, 50];
+oY = [50, 70];
+oXmin = oX(1);
+oXmax = oX(2);
+oYmin = oY(1);
+oYmax = oY(2);
+maxval = 5000;
 
 x2 = linspace(0, 100, 101);
 y2 = x2';
 
-z2 = (0.5 * c2 * (1 ./ (DistanceCal(x2, y2, oCenter(1), oCenter(2))) - 1/disTh).^2) .* (DistanceCal(x2, y2, oCenter(1), oCenter(2)) <= disTh);
+z2 = (0.5 * c2 * (1 ./ (BoxDistanceCal(x2, y2, oXmin, oXmax, oYmin, oYmax)) - 1/disTh).^2) .* ((BoxDistanceCal(x2, y2, oXmin, oXmax, oYmin, oYmax)) <= disTh);
 z2(z2>maxval) = maxval;
 surf(x2,y2,z2);
 figure;
-contour(x2, y2, z2, 100);
+contour(x2, y2, z2, 500);
 figure;
 
 z = z1 + z2;
 surf(x1, y1, z);
 figure;
 contour(x1, y1, z, 100);
+figure;
 
 start = [10, 80];
 
 dt = 0.1;
+ang = 0;
 
 x = start(1);
 y = start(2);
-ang = -pi / 2;
 xg = goal(1);
 yg = goal(2);
-xo = oCenter(1);
-yo = oCenter(2);
+% xo = oCenter(1);
+% yo = oCenter(2);
+
 
 xData = [];
 yData = [];
 
-while (abs(x - xg) > 0.3) || (abs(y - yg) > 0.3)
+while (abs(x - xg) > 1) || (abs(y - yg) > 1)
     [xatt,yatt] = FattCal(x, y, xg, yg, c1);
-    [xrep,yrep] = FrepCal(x, y, xo, yo, c2, disTh);
+    [xrep,yrep] = FrepCalBox(x, y, oXmin, oXmax, oYmin, oYmax, c2, disTh);
 
-    % TODO: why is xatt + xrep
     xdiv = xatt + xrep;
     ydiv = yatt + yrep;
 
@@ -92,10 +96,7 @@ while (abs(x - xg) > 0.3) || (abs(y - yg) > 0.3)
     ylim([0 100])
 
 end
-figure;
-plot(xData,yData,'-', xo, yo, '+');
+
+plot(xData,yData,'-', [30,50,50,30,30], [50,50,70,70,50], 'r-');
 xlim([0 100])
 ylim([0 100])
-
-
-

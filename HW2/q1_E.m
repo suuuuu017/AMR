@@ -19,11 +19,11 @@ figure;
 contour(x1, y1, z1, 100);
 figure;
 
-c2 = 110000;
+c2 = 10000;
 % c2 = 100000;
-maxval = 3000;
+maxval = 5000;
 
-disTh = 60;
+disTh = 40;
 
 oCenter = [40, 60];
 
@@ -59,35 +59,40 @@ xData = [];
 yData = [];
 theta = 0;
 
-while (abs(x - xg) > 1 || (abs(y - yg) > 1))
-    [xatt,yatt] = FattCal(x, y, xg, yg, c1);
-    [xrep,yrep] = FrepCal(x, y, xo, yo, c2, disTh);
-
-    xdiv = xatt + xrep;
-    ydiv = yatt + yrep;
-
-    % max 5
-    theta = atan2(ydiv, xdiv);
-    theta = atan2(sin(theta), cos(theta));
-
-
-    vel = sqrt(ydiv ^ 2 + xdiv ^ 2);
-    if vel > 5
-        vel = 5;
-    end
-
+while (abs(x - xg) > 2 || (abs(y - yg) > 2))
     xData = [xData, x];
     yData = [yData, y];
-    x = x + vel * cos(theta) * dt;
-    y = y + vel * sin(theta) * dt;
-    plot(xData,yData,'-');
-    xlim([0 100])
-    ylim([0 100])
-%     pause(0.01)
-
-
+    currE = z2(x,y);
+    surr = [z2(x+1, y), z2(x-1, y),z2(x, y+1),z2(x, y-1),...
+        z2(x+1, y+1),z2(x+1, y-1),z2(x-1, y+1),z2(x-1, y-1)];
+    minSurr = min(surr);
+    if minSurr == surr(1)
+        x = x+1;
+        y = y;
+    elseif minSurr == surr(2)
+        x = x-1;
+        y = y;
+    elseif minSurr == surr(3)
+        x = x;
+        y = y+1;
+    elseif minSurr == surr(4)
+        x = x;
+        y = y-1;
+    elseif minSurr == surr(5)
+        x = x+1;
+        y = y+1;
+    elseif minSurr == surr(6)
+        x = x+1;
+        y = y-1;
+    elseif minSurr == surr(7)
+        x = x-1;
+        y = y+1;
+    elseif minSurr == surr(8)
+        x = x-1;
+        y = y-1;
+    end
 end
 
-plot(xData,yData,'-', xo, yo, '+');
+plot(xData,yData,'-');
 xlim([0 100])
 ylim([0 100])

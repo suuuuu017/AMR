@@ -18,11 +18,9 @@ figure;
 contour(x1, y1, z1, 100);
 figure;
 
-c2 = 110000;
-% c2 = 100000;
-maxval = 3000;
+c2 = 15000;
 
-disTh = 60;
+disTh = 30;
 
 oCenter = [40, 60];
 
@@ -30,7 +28,6 @@ x2 = linspace(0, 100, 101);
 y2 = x2';
 
 z2 = (0.5 * c2 * (1 ./ (DistanceCal(x2, y2, oCenter(1), oCenter(2))) - 1/disTh).^2) .* (DistanceCal(x2, y2, oCenter(1), oCenter(2)) <= disTh);
-z2(z2>maxval) = maxval;
 surf(x2,y2,z2);
 figure;
 contour(x2, y2, z2, 100);
@@ -55,6 +52,8 @@ yo = oCenter(2);
 
 xData = [];
 yData = [];
+
+figure;
 
 while (abs(x - xg) > 0.3) || (abs(y - yg) > 0.3)
     [xatt,yatt] = FattCal(x, y, xg, yg, c1);
@@ -90,10 +89,11 @@ while (abs(x - xg) > 0.3) || (abs(y - yg) > 0.3)
     plot(robot(:,1),robot(:,2),'-',xData,yData,'-');
     xlim([0 100])
     ylim([0 100])
+    pause(0.01)
 
 end
-figure;
-plot(xData,yData,'-', xo, yo, '+');
+
+plot(xData,yData,'-');
 xlim([0 100])
 ylim([0 100])
 

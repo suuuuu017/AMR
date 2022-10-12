@@ -12,10 +12,10 @@ center = [x y];
 
 % Robot triangle shape
 
-a = [0 -3];
-b = [12 0];
-c = [0 3];
-d = [-6 0];
+a = [0 -1];
+b = [4 0];
+c = [0 1];
+d = [-2 0];
 
 % Rotation Matrix
 
