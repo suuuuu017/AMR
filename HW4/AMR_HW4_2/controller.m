@@ -36,8 +36,8 @@ phicDot = -1 / params.gravity * (0 + ...
     kvy * 0 + ...
     kpy * (des_state.vel(1) - state.vel(1)));
 
-kvphi = 200;
-kpphi = 80;
+kvphi = 250;
+kpphi = 800;
 
 u2 = params.Ixx * (0 + kvphi * (phicDot - state.omega(1)) ...
     + kpphi * (phic - state.rot(1)));
